@@ -30,6 +30,22 @@ RCT_EXPORT_METHOD(
 }
 
 RCT_EXPORT_METHOD(
+  addPass:(NSString *)base64String
+  resolver:(RCTPromiseResolveBlock)resolve
+  rejecter:(RCTPromiseRejectBlock)reject
+) {
+  NSData *data = [[NSData alloc] initWithBase64EncodedString:base64String options:0];
+  if (!data) {
+    reject(@"base64_decode_error", @"Failed to decode base64 string", nil);
+    return;
+  }
+
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self showViewControllerWithData:data resolver:resolve rejecter:reject];
+  });
+}
+
+RCT_EXPORT_METHOD(
                   showAddPassControllerFromFile:(NSString *)filepath
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject
