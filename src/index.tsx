@@ -3,6 +3,7 @@ import { NativeModules, Platform, Linking } from 'react-native';
 type WalletManagerType = {
   canAddPasses(): Promise<boolean>;
   showAddPassControllerFromFile(url: string): Promise<boolean>;
+  addPass: (base64: string) => Promise<boolean>;
   addPassFromUrl(url: string): Promise<boolean>;
   hasPass(cardIdentifier: string, serialNumber?: string): Promise<boolean>;
   removePass(cardIdentifier: string, serialNumber?: string): Promise<boolean>;
@@ -29,6 +30,12 @@ export default {
       throw new Error('addPassToGoogleWallet method not available on IOS');
     }
     return await WalletManager.addPassToGoogleWallet(jwt);
+  },
+  addPass: async (base64: string) => {
+    if (Platform.OS === 'android') {
+      throw new Error('addPass method not available on Android');
+    }
+    return await WalletManager.addPass(base64);
   },
   addPassFromUrl:
     Platform.OS === 'ios'
